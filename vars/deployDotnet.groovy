@@ -11,7 +11,7 @@ def call(Map params) {
             kubernetes {
                 cloud 'kubernetes-cluster'
                 inheritFrom 'kube-agent'
-                namespace 'devops-tools'
+                namespace 'jenkins-agents'
                 podRetention always()
             }
         }
