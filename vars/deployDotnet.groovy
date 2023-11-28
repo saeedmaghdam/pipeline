@@ -62,7 +62,7 @@ def call(Map params) {
                 steps {
                     script {
                         sh "echo ${env.BUILD_ID}"
-                        sh "helm upgrade --install ${params.PROJECT_NAME} ./helm/ --set image.tag=${env.BUILD_ID} -n om"
+                        sh "helm upgrade --install ${params.PROJECT_NAME} ./helm/ --set image.tag=${env.BUILD_ID}"
                     }
                 }
             }
