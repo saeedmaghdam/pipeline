@@ -2,6 +2,7 @@ def call(Map params) {
     pipeline {
         parameters {
             string description: 'The project\'s name that will be used during the pipeline', name: 'PROJECT_NAME', trim: true, defaultValue: params.PROJECT_NAME ?: ''
+            string description: 'The project\'s category in registry', name: 'REGISTRY_CATEGORY_NAME', trim: true, defaultValue: params.REGISTRY_CATEGORY_NAME ?: ''
             string description: 'The GitHub\'s repository address', name: 'REPOSITORY_ADDRESS', trim: true, defaultValue: params.REPOSITORY_ADDRESS ?: ''
             string description: 'The branch that will be used during pipeline', name: 'BRANCH', trim: true, defaultValue: params.BRANCH ?: 'main'
             string description: 'The Dockerfile\'s relative path', name: 'DOCKERFILE_PATH', trim: true, defaultValue: params.DOCKERFILE_PATH ?: ''
@@ -46,14 +47,14 @@ def call(Map params) {
                 steps {
                     script {
                         sh "echo ${env.REGISTRY_PASSWORD} | docker login ${env.REGISTRY_URL} --username ${env.REGISTRY_USERNAME} --password-stdin"
-                        def image = docker.build("${env.REGISTRY_URL}/antaeus/${params.PROJECT_NAME}:${env.BUILD_ID}", "-f ${params.DOCKERFILE_PATH} .")
+                        def image = docker.build("${env.REGISTRY_URL}/${params.REGISTRY_CATEGORY_NAME}/${params.PROJECT_NAME}:${env.BUILD_ID}", "-f ${params.DOCKERFILE_PATH} .")
                     }
                 }
             }
             stage('Push Docker Image') {
                 steps {
                     script {
-                        def image = docker.image("${env.REGISTRY_URL}/antaeus/${params.PROJECT_NAME}:${env.BUILD_ID}")
+                        def image = docker.image("${env.REGISTRY_URL}/${params.REGISTRY_CATEGORY_NAME}/${params.PROJECT_NAME}:${env.BUILD_ID}")
                         image.push("${env.BUILD_ID}")
                     }
                 }
