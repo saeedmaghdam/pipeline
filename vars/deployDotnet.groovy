@@ -5,7 +5,7 @@ def call(Map params) {
             string description: 'The project\'s category in registry', name: 'REGISTRY_CATEGORY_NAME', trim: true, defaultValue: params.REGISTRY_CATEGORY_NAME ?: ''
             string description: 'The GitHub\'s repository address', name: 'REPOSITORY_ADDRESS', trim: true, defaultValue: params.REPOSITORY_ADDRESS ?: ''
             string description: 'The branch that will be used during pipeline', name: 'BRANCH', trim: true, defaultValue: params.BRANCH ?: 'main'
-            string description: 'The Dockerfile\'s relative path', name: 'PIPE_DOCKERFILE_PATH', trim: true, defaultValue: params.PIPE_DOCKERFILE_PATH ?: ''
+            string description: 'The Dockerfile\'s relative path', name: 'DOCKERFILE_PATH', trim: true, defaultValue: params.DOCKERFILE_PATH ?: ''
             string description: 'Docker context path', name: 'PIPE_DOCKER_CONTEXT_PATH', trim: true, defaultValue: params.PIPE_DOCKER_CONTEXT_PATH ?: '.'
         }    
         
@@ -48,7 +48,7 @@ def call(Map params) {
                 steps {
                     script {
                         sh "echo ${env.REGISTRY_PASSWORD} | docker login ${env.REGISTRY_URL} --username ${env.REGISTRY_USERNAME} --password-stdin"
-                        def image = docker.build("${env.REGISTRY_URL}/${params.REGISTRY_CATEGORY_NAME}/${params.PROJECT_NAME}:${env.BUILD_ID}", "-f ${params.PIPE_DOCKERFILE_PATH} ${params.PIPE_DOCKER_CONTEXT_PATH}")
+                        def image = docker.build("${env.REGISTRY_URL}/${params.REGISTRY_CATEGORY_NAME}/${params.PROJECT_NAME}:${env.BUILD_ID}", "-f ${params.DOCKERFILE_PATH} ${params.PIPE_DOCKER_CONTEXT_PATH}")
                     }
                 }
             }
